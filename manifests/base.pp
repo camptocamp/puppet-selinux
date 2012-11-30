@@ -16,7 +16,7 @@ class selinux::base {
   # required to build custom policy modules.
   package { ["checkpolicy", "policycoreutils"]: ensure => present }
 
-  case $operatingsystem {
+  case $::osfamily {
     RedHat: {
       case $lsbdistrelease {
         "5.4", "5.5", "5.6", "5.7", "5.8", "5.9": {
