@@ -57,7 +57,7 @@ define selinux::module ($workdir="/etc/puppet/selinux", $dest="/usr/share/selinu
   exec { "build selinux policy module ${name}":
     cwd => $workdir,
     command => "checkmodule -M -m ${name}.te -o ${name}.mod",
-    refreshonly => true,
+    creates => "${workdir}/${name}.mod",
     require => [File["${workdir}/${name}.te"], Package["checkpolicy"]],
     notify => Exec["build selinux policy package ${name}"],
   }
@@ -65,7 +65,7 @@ define selinux::module ($workdir="/etc/puppet/selinux", $dest="/usr/share/selinu
   exec { "build selinux policy package ${name}":
     cwd => $workdir,
     command => "semodule_package -o ${dest}/${name}.pp -m ${name}.mod",
-    refreshonly => true,
+    creates => "${dest}/${name}.pp",
     require => [Exec["build selinux policy module ${name}"], Package["policycoreutils"]],
   }
 }
