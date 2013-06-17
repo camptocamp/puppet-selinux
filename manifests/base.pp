@@ -1,55 +1,53 @@
-/*
-== Class: selinux::base
-
-This class ensures selinux utilities and services are installed and running.
-It will also install the ruby bindings which are required to use puppet's
-selinux resource types.
-
-*/
+# == Class: selinux::base
+#
+# This class ensures selinux utilities and services are installed and running.
+# It will also install the ruby bindings which are required to use puppet's
+# selinux resource types.
+#
 class selinux::base {
 
-  service { "auditd":
-    enable => true,
+  service { 'auditd':
     ensure => running,
+    enable => true,
   }
 
   # required to build custom policy modules.
-  package { ["checkpolicy", "policycoreutils"]: ensure => present }
+  package { ['checkpolicy', 'policycoreutils']: ensure => present }
 
   case $::osfamily {
     RedHat: {
-      case $lsbdistrelease {
-        "5.4", "5.5", "5.6", "5.7", "5.8", "5.9": {
-          package { "libselinux-ruby-puppet":
+      case $::lsbdistrelease {
+        '5.4', '5.5', '5.6', '5.7', '5.8', '5.9': {
+          package { 'libselinux-ruby-puppet':
             ensure => absent,
-            before => Package["libselinux-ruby"],
+            before => Package['libselinux-ruby'],
           }
-          $rubypkg_alias = "libselinux-ruby"
+          $rubypkg_alias = 'libselinux-ruby'
         }
 
         /^6/: {
-          package { "policycoreutils-python":
+          package { 'policycoreutils-python':
             ensure => present,
           }
-          $rubypkg_alias = "libselinux-ruby"
+          $rubypkg_alias = 'libselinux-ruby'
         }
 
-        default: { $rubypkg_alias = "libselinux-ruby-puppet" }
+        default: { $rubypkg_alias = 'libselinux-ruby-puppet' }
 
       }
     }
 
     Fedora: {
-      case $lsbdistcodename {
-        Cambridge: { $rubypkg_alias = "libselinux-ruby" }
-        default: { $rubypkg_alias = "libselinux-ruby-puppet" }
+      case $::lsbdistcodename {
+        Cambridge: { $rubypkg_alias = 'libselinux-ruby' }
+        default:   { $rubypkg_alias = 'libselinux-ruby-puppet' }
       }
     }
 
     Debian: {
-      case $lsbdistcodename {
-        sid, squeeze: { $rubypkg_alias = "libselinux-ruby1.8" }
-        default: { $rubypkg_alias = "libselinux-puppet-ruby1.8" }
+      case $::lsbdistcodename {
+        sid, squeeze: { $rubypkg_alias = 'libselinux-ruby1.8' }
+        default:      { $rubypkg_alias = 'libselinux-puppet-ruby1.8' }
       }
     }
 
@@ -57,8 +55,8 @@ class selinux::base {
 
   # if needed, you can fetch and build libselinux-ruby-puppet from
   # http://github.com/twpayne/libselinux-ruby-puppet
-  package { "$rubypkg_alias":
+  package { $rubypkg_alias:
     ensure => present,
-    alias => "selinux-ruby-bindings",
+    alias  => 'selinux-ruby-bindings',
   }
 }
