@@ -24,8 +24,6 @@ define selinux::seport($port, $ensure='present', $proto='tcp', $setype=undef) {
 
   # this is dreadful to read, sorry...
 
-  $re = "^${name}\W+${proto}\W+.*\W${port}(\W|$)"
-
   if $ensure == 'present' {
     $mgt  = '--add'
     $grep = 'egrep -q'
@@ -39,6 +37,8 @@ define selinux::seport($port, $ensure='present', $proto='tcp', $setype=undef) {
   } else {
     $type = $setype
   }
+
+  $re = "^${type}\W+${proto}\W+.*\W${port}(\W|$)"
 
   exec { "semanage port ${port}, proto ${proto}, type ${name}":
     command => "semanage port ${mgt} --type ${type} --proto ${proto} ${port}",
