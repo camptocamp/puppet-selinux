@@ -16,23 +16,36 @@ class selinux::base {
 
   case $::osfamily {
     RedHat: {
-      case $::lsbdistrelease {
-        '5.4', '5.5', '5.6', '5.7', '5.8', '5.9': {
-          package { 'libselinux-ruby-puppet':
-            ensure => absent,
-            before => Package['libselinux-ruby'],
-          }
-          $rubypkg_alias = 'libselinux-ruby'
-        }
+      case $::lsbmajdistrelease {
 
-        /^6/: {
+        '6': {
           package { 'policycoreutils-python':
             ensure => present,
           }
           $rubypkg_alias = 'libselinux-ruby'
         }
 
-        default: { $rubypkg_alias = 'libselinux-ruby-puppet' }
+        '5': {
+
+          case $::lsbdistrelease {
+            /^5.0$/, /^5.1$/, /^5.2$/, /^5.3$/: {
+              $rubypkg_alias = 'libselinux-ruby-puppet'
+            }
+
+            default: {
+              package { 'libselinux-ruby-puppet':
+                ensure => absent,
+                before => Package['libselinux-ruby'],
+              }
+              $rubypkg_alias = 'libselinux-ruby'
+            }
+          }
+
+        } # '5'
+
+        '4': { $rubypkg_alias = 'libselinux-ruby-puppet' }
+
+        default: { $rubypkg_alias = 'libselinux-ruby' }
 
       }
     }
