@@ -5,6 +5,10 @@
 #
 define selinux::permissivedomain( $ensure='present' ) {
 
+  if ($::operatingsystemmajrelease < 6) {
+    fail ("selinux permissive domains are only suppported on RHEL6 and higher.")
+  }
+
   if $ensure == 'present' {
     $action = '-a'
     $onlyif = undef
