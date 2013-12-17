@@ -6,14 +6,19 @@
 define selinux::permissivedomain( $ensure='present' ) {
 
   if $ensure == 'present' {
-    $action='-a'
+    $action = '-a'
+    $onlyif = undef
+    $unless = "semanage permissive -l | grep -q '^${name}$'"
   } else {
-    $action='-d'
+    $action = '-d'
+    $onlyif = "semanage permissive -l | grep -q '^${name}$'"
+    $unless = undef
   }
 
   exec { "semanage permissive ${action} ${name}":
-    command => "semanage permissive ${action} ${name}",
-    unless  => "semodule --list | grep permissive_${name}",
+    command => "semanage permissive ${action} '${name}'",
+    onlyif  => $onlyif,
+    unless  => $unless,
   }
 
 }
