@@ -40,38 +40,28 @@ define selinux::module (
     }
   }
 
-  if $content {
-    file { "${workdir}/${name}.te":
-      ensure  => present,
-      content => $content,
-      require => File[$workdir],
-      notify  => Exec["build selinux policy module ${name}"],
+  case $osfamily {
+
+    'RedHat': {
+      selinux::module::redhat{ "$name":
+        workdir => $workdir,
+        dest    => $dest,
+        content => $content,
+        source  => $source
+      }
     }
-  }
-  if $source {
-    file { "${workdir}/${name}.te":
-      ensure  => present,
-      source  => $source,
-      require => File[$workdir],
-      notify  => Exec["build selinux policy module ${name}"],
+
+    'Debian': {
+      selinux::module::debian{ "$name":
+        workdir => $workdir,
+        dest    => $dest,
+        content => $content,
+        source  => $source
+      }
     }
+
+    default: { fail("${::operatingsystem} is not supportted.") }
+
   }
 
-  exec { "build selinux policy module ${name}":
-    cwd     => $workdir,
-    command => "checkmodule -M -m ${name}.te -o ${name}.mod",
-    onlyif  => "semodule -l | grep -q -P \"^${name}\t\"$(head -n1 ${name}.te | grep -o -e \"[0-9\.]*\")",
-    require => [File["${workdir}/${name}.te"], Package['checkpolicy']],
-    notify  => Exec["build selinux policy package ${name}"],
-  }
-
-  exec { "build selinux policy package ${name}":
-    cwd         => $workdir,
-    command     => "semodule_package -o ${dest}/${name}.pp -m ${name}.mod",
-    refreshonly => true,
-    require     => [
-      Exec["build selinux policy module ${name}"],
-      Package['policycoreutils'],
-    ],
-  }
 }
