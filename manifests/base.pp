@@ -16,6 +16,11 @@ class selinux::base {
 
   case $::osfamily {
     RedHat: {
+
+      package{ 'selinux-policy-devel':
+        ensure => present,
+      }
+
       case $::lsbmajdistrelease {
 
         '6': {
