@@ -38,10 +38,6 @@ define selinux::module::redhat (
     }
   }
 
-  package{ 'selinux-policy-devel':
-    ensure => present,
-  }
-
   file { "${dest}/${name}.pp":
     require => [File["${dest}/${name}.te"], Package['checkpolicy']],
     notify  => Exec["build selinux policy package ${name}"],
