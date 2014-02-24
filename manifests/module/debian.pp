@@ -1,0 +1,61 @@
+#
+# == Definition: selinux::module::debian
+#
+# This definition builds a binary SELinux module.
+# It should only be called ba the selinux::module definition, in case of
+# Debian osfamily.
+#
+# Parameters:
+#
+# - *name*: the name of the SELinux module
+# - *workdir*: where the module source and binary files are stored. Defaults to
+#   "/etc/puppet/selinux" (not used here, yet ?)
+# - *dest*: where the binary module must be copied. Defaults to
+#   "/usr/share/selinux/targeted/"
+# - *content*: inline content or template of the module source
+# - *source*: file:// or puppet:// URI of the module source file
+#
+#
+define selinux::module::debian (
+  $workdir='/etc/puppet/selinux',
+  $dest='/usr/share/selinux/targeted/',
+  $content=undef,
+  $source=undef
+) {
+
+  if $content {
+    file { "${workdir}/${name}.te":
+      ensure => present,
+      content => $content,
+      require => File[$workdir],
+      notify => Exec["build selinux policy module ${name}"],
+    }
+  }
+  if $source {
+    file { "${workdir}/${name}.te":
+      ensure => present,
+      source => $source,
+      require => File[$workdir],
+      notify => Exec["build selinux policy module ${name}"],
+    }
+  }
+
+  exec { "build selinux policy module ${name}":
+    cwd => $workdir,
+    command => "checkmodule -M -m ${name}.te -o ${name}.mod",
+    onlyif => "semodule -l | grep -q -P \"^${name}\t\"$(head -n1 ${name}.te | grep -o -e \"[0-9\.]*\")",
+    require => [File["${workdir}/${name}.te"], Package['checkpolicy']],
+    notify => Exec["build selinux policy package ${name}"],
+  }
+
+  exec { "build selinux policy package ${name}":
+    cwd => $workdir,
+    command => "semodule_package -o ${dest}/${name}.pp -m ${name}.mod",
+    refreshonly => true,
+    require => [
+      Exec["build selinux policy module ${name}"],
+      Package['policycoreutils'],
+    ],
+  }
+
+}
