@@ -17,10 +17,6 @@ class selinux::base {
   case $::osfamily {
     RedHat: {
 
-      package{ 'selinux-policy-devel':
-        ensure => present,
-      }
-
       case $::lsbmajdistrelease {
 
         '6': {
@@ -31,6 +27,10 @@ class selinux::base {
         }
 
         '5': {
+
+          package{ 'selinux-policy-devel':
+            ensure => present,
+          }
 
           case $::lsbdistrelease {
             /^5.0$/, /^5.1$/, /^5.2$/, /^5.3$/: {

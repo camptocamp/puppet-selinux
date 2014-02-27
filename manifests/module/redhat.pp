@@ -2,7 +2,7 @@
 # == Definition: selinux::module::redhat
 #
 # This definition builds a binary SELinux module with the Makefile provided by
-# the selinux-policy-devel package.
+# the selinux-policy-devel or selinux-policy package.
 # It should only be called ba the selinux::module definition, in case of
 # RedHat osfamily.
 #
@@ -43,10 +43,14 @@ define selinux::module::redhat (
     notify  => Exec["build selinux policy package ${name}"],
   }
 
+  $build_reqs = $lsbmajdistrelease  ? {
+    '5'     => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
+    default => [File["${dest}/${name}.te"], Package['checkpolicy']],
+  }
   exec { "build selinux policy package ${name}":
     cwd     => $dest,
     command => "make -f /usr/share/selinux/devel/Makefile ${name}.pp",
-    require => [File["${dest}/${name}.te"], Package['checkpolicy'], Package['selinux-policy-devel']],
+    require => $build_reqs,
   }
 
 }
