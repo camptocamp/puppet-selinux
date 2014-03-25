@@ -51,6 +51,7 @@ define selinux::module::redhat (
     cwd     => $dest,
     command => "make -f /usr/share/selinux/devel/Makefile ${name}.pp",
     require => $build_reqs,
+    refreshonly => true,
   }
 
 }
