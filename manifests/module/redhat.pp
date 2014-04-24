@@ -24,18 +24,10 @@ define selinux::module::redhat (
   $source=undef
 ) {
 
-  if $content {
-    file { "${dest}/${name}.te":
-      ensure  => present,
-      content => $content,
-    }
-  }
-
-  if $source {
-    file { "${dest}/${name}.te":
-      ensure  => present,
-      source  => $source,
-    }
+  file { "${dest}/${name}.te":
+    ensure  => present,
+    content => $content,
+    source  => $source,
   }
 
   file { "${dest}/${name}.pp":
