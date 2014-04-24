@@ -26,37 +26,36 @@
 #   }
 #
 define selinux::module (
+  ensure=present,
   $workdir='/etc/puppet/selinux',
   $dest='/usr/share/selinux/targeted/',
   $content=undef,
-  $source=undef
+  $source=undef,
+  $load=true,
 ) {
 
-  if !defined(File[$workdir]) {
-    file { $workdir:
-      ensure => directory,
-      mode   => '0700',
-      owner  => 'root',
-    }
-  }
+  validate_bool($load)
 
   case $osfamily {
 
     'RedHat': {
       selinux::module::redhat{ "$name":
-        workdir => $workdir,
+        ensure  => $ensure,
         dest    => $dest,
         content => $content,
-        source  => $source
+        source  => $source,
+        load    => $load,
       }
     }
 
     'Debian': {
       selinux::module::debian{ "$name":
+        ensure  => $ensure,
         workdir => $workdir,
         dest    => $dest,
         content => $content,
-        source  => $source
+        source  => $source,
+        load    => $load,
       }
     }
 

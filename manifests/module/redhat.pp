@@ -18,32 +18,66 @@
 #
 #
 define selinux::module::redhat (
-  $workdir='/etc/puppet/selinux',
+  $ensure=present,
   $dest='/usr/share/selinux/targeted/',
   $content=undef,
-  $source=undef
+  $source=undef,
+  $load=true,
 ) {
 
-  file { "${dest}/${name}.te":
-    ensure  => present,
-    content => $content,
-    source  => $source,
+  case $ensure {
+    present: {
+      file { "${dest}/${name}.te":
+        ensure  => present,
+        content => $content,
+        source  => $source,
+        notify  => Exec["build selinux policy package ${name} if .te changed"],
+      }
+    
+      $build_reqs = $lsbmajdistrelease  ? {
+        '5'     => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
+        default => [File["${dest}/${name}.te"], Package['checkpolicy']],
+      }
+      $make_cmd = "make -f /usr/share/selinux/devel/Makefile ${name}.pp"
+    
+      # Module building needs to happen in two cases that cannot be defined in a single Exec
+      exec { "build selinux policy package ${name} if .te changed":
+        cwd         => $dest,
+        command     => $make_cmd,
+        require     => $build_reqs,
+        refreshonly => true,
+      }
+      exec { "build selinux policy package ${name} if .pp missing":
+        cwd     => $dest,
+        command => $make_cmd,
+        creates => "${dest}/${name}.pp",
+        require => flatten([ $build_reqs, Exec["build selinux policy package ${name} if .te changed"] ]),
+      }
+    
+      if $load {
+        selmodule { $name:
+          ensure      => present,
+          syncversion => true,
+          require     => Exec["build selinux policy package ${name} if .pp missing"],
+        }
+      }
+    }
+    absent: {
+      file {["${dest}/${name}.te",
+             "${dest}/${name}.if",
+             "${dest}/${name}.fc",
+             "${dest}/${name}.pp"]:
+        ensure => absent,
+      }
+
+      if $load {
+        selmodule { $name:
+          ensure => absent,
+        }
+      }
+    }
+    default: { fail "$ensure must be 'present' or 'absent'" }
   }
 
-  file { "${dest}/${name}.pp":
-    require => [File["${dest}/${name}.te"], Package['checkpolicy']],
-    notify  => Exec["build selinux policy package ${name}"],
-  }
-
-  $build_reqs = $lsbmajdistrelease  ? {
-    '5'     => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
-    default => [File["${dest}/${name}.te"], Package['checkpolicy']],
-  }
-  exec { "build selinux policy package ${name}":
-    cwd     => $dest,
-    command => "make -f /usr/share/selinux/devel/Makefile ${name}.pp",
-    require => $build_reqs,
-    refreshonly => true,
-  }
 
 }
