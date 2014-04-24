@@ -26,7 +26,7 @@
 #   }
 #
 define selinux::module (
-  ensure=present,
+  $ensure=present,
   $workdir='/etc/puppet/selinux',
   $dest='/usr/share/selinux/targeted/',
   $content=undef,
