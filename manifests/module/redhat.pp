@@ -35,8 +35,8 @@ define selinux::module::redhat (
       }
     
       $build_reqs = $lsbmajdistrelease  ? {
-        '5'     => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
-        default => [File["${dest}/${name}.te"], Package['checkpolicy']],
+        /5|7/ => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
+        '6'   => [File["${dest}/${name}.te"], Package['checkpolicy']],
       }
       $make_cmd = "make -f /usr/share/selinux/devel/Makefile ${name}.pp"
     
