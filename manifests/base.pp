@@ -19,6 +19,16 @@ class selinux::base {
 
       case $::lsbmajdistrelease {
 
+        '7': {
+          package { 'policycoreutils-python':
+            ensure => present,
+          }
+          package{ 'selinux-policy-devel':
+            ensure => present,
+          }
+          $rubypkg_alias = 'libselinux-ruby'
+        }
+
         '6': {
           package { 'policycoreutils-python':
             ensure => present,
