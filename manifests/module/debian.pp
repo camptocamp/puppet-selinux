@@ -46,7 +46,7 @@ define selinux::module::debian (
       exec { "build selinux policy module ${name}":
         cwd => $workdir,
         command => "checkmodule -M -m ${name}.te -o ${name}.mod",
-        onlyif => "semodule -l | grep -q -P \"^${name}\t\"$(head -n1 ${name}.te | grep -o -e \"[0-9\.]*\")",
+        onlyif => "semodule -l | grep -q -P \"^${name}\t\"$(head -n1 ${name}.te | grep -o -e \"[0-9\\.]*\")",
         require => [File["${workdir}/${name}.te"], Package['checkpolicy']],
         notify => Exec["build selinux policy package ${name}"],
       }

@@ -38,7 +38,7 @@ define selinux::seport($port, $ensure='present', $proto='tcp', $setype=undef) {
     $type = $setype
   }
 
-  $re = "^${type}\W+${proto}\W+.*\W${port}(\W|$)"
+  $re = "^${type}\\W+${proto}\\W+.*\\W${port}(\\W|$)"
 
   exec { "semanage port ${port}, proto ${proto}, type ${name}":
     command => "semanage port ${mgt} --type ${type} --proto ${proto} ${port}",
