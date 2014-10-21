@@ -34,7 +34,7 @@ define selinux::module::redhat (
         notify  => Exec["build selinux policy package ${name} if .te changed"],
       }
     
-      $build_reqs = $lsbmajdistrelease  ? {
+      $build_reqs = $::lsbmajdistrelease  ? {
         /5|7/ => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
         '6'   => [File["${dest}/${name}.te"], Package['checkpolicy']],
       }
@@ -63,10 +63,12 @@ define selinux::module::redhat (
       }
     }
     absent: {
-      file {["${dest}/${name}.te",
-             "${dest}/${name}.if",
-             "${dest}/${name}.fc",
-             "${dest}/${name}.pp"]:
+      file {[
+        "${dest}/${name}.te",
+        "${dest}/${name}.if",
+        "${dest}/${name}.fc",
+        "${dest}/${name}.pp",
+      ]:
         ensure => absent,
       }
 
@@ -76,7 +78,7 @@ define selinux::module::redhat (
         }
       }
     }
-    default: { fail "$ensure must be 'present' or 'absent'" }
+    default: { fail "${ensure} must be 'present' or 'absent'" }
   }
 
 

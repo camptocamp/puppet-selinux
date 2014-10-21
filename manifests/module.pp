@@ -36,10 +36,10 @@ define selinux::module (
 
   validate_bool($load)
 
-  case $osfamily {
+  case $::osfamily {
 
     'RedHat': {
-      selinux::module::redhat{ "$name":
+      selinux::module::redhat{ $name:
         ensure  => $ensure,
         dest    => $dest,
         content => $content,
@@ -49,7 +49,7 @@ define selinux::module (
     }
 
     'Debian': {
-      selinux::module::debian{ "$name":
+      selinux::module::debian{ $name:
         ensure  => $ensure,
         workdir => $workdir,
         dest    => $dest,

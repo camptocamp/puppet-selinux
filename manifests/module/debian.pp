@@ -44,18 +44,18 @@ define selinux::module::debian (
       }
     
       exec { "build selinux policy module ${name}":
-        cwd => $workdir,
+        cwd     => $workdir,
         command => "checkmodule -M -m ${name}.te -o ${name}.mod",
-        onlyif => "semodule -l | grep -q -P \"^${name}\t\"$(head -n1 ${name}.te | grep -o -e \"[0-9\\.]*\")",
+        onlyif  => "semodule -l | grep -q -P \"^${name}\t\"$(head -n1 ${name}.te | grep -o -e \"[0-9\\.]*\")",
         require => [File["${workdir}/${name}.te"], Package['checkpolicy']],
-        notify => Exec["build selinux policy package ${name}"],
+        notify  => Exec["build selinux policy package ${name}"],
       }
     
       exec { "build selinux policy package ${name}":
-        cwd => $workdir,
-        command => "semodule_package -o ${dest}/${name}.pp -m ${name}.mod",
+        cwd         => $workdir,
+        command     => "semodule_package -o ${dest}/${name}.pp -m ${name}.mod",
         refreshonly => true,
-        require => [
+        require     => [
           Exec["build selinux policy module ${name}"],
           Package['policycoreutils'],
         ],
@@ -70,9 +70,11 @@ define selinux::module::debian (
       }
     }
     absent: {
-      file {["${workdir}/${name}.te",
-             "${workdir}/${name}.mod",
-             "${dest}/${name}.pp"]:
+      file {[
+        "${workdir}/${name}.te",
+        "${workdir}/${name}.mod",
+        "${dest}/${name}.pp",
+      ]:
         ensure => absent,
       }
 
@@ -82,7 +84,7 @@ define selinux::module::debian (
         }
       }
     }
-    default: { fail "$ensure must be 'present' or 'absent'" }
+    default: { fail "${ensure} must be 'present' or 'absent'" }
   }
 
 }
