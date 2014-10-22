@@ -15,6 +15,7 @@
 #   "/usr/share/selinux/targeted/"
 # - *content*: inline content or template of the module source
 # - *source*: file:// or puppet:// URI of the module source file
+# - *withfc*: true if there is a file context source file
 #
 #
 define selinux::module::redhat (
@@ -22,6 +23,7 @@ define selinux::module::redhat (
   $dest='/usr/share/selinux/targeted/',
   $content=undef,
   $source=undef,
+  $withfc=false,
   $load=true,
 ) {
 
@@ -31,17 +33,27 @@ define selinux::module::redhat (
         ensure  => present,
         content => $content,
         source  => $source,
-        notify  => Exec["build selinux policy package ${name} if .te changed"],
+        notify  => Exec["build selinux policy package ${name} if source changed"],
       }
-    
+
+      # if there is source for file context configuration
+      if $withfc {
+        file{ "${dest}/${name}.fc":
+          ensure  => present,
+          content => $content,
+          source  => regsubst( $source, '(.*)\.te', '\1.fc' ),
+          notify  => Exec["build selinux policy package ${name} if source changed"],
+        }
+      }
+
       $build_reqs = $::lsbmajdistrelease  ? {
         /5|7/ => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
         '6'   => [File["${dest}/${name}.te"], Package['checkpolicy']],
       }
       $make_cmd = "make -f /usr/share/selinux/devel/Makefile ${name}.pp"
-    
+
       # Module building needs to happen in two cases that cannot be defined in a single Exec
-      exec { "build selinux policy package ${name} if .te changed":
+      exec { "build selinux policy package ${name} if source changed":
         cwd         => $dest,
         command     => $make_cmd,
         require     => $build_reqs,
@@ -51,9 +63,9 @@ define selinux::module::redhat (
         cwd     => $dest,
         command => $make_cmd,
         creates => "${dest}/${name}.pp",
-        require => flatten([ $build_reqs, Exec["build selinux policy package ${name} if .te changed"] ]),
+        require => flatten([ $build_reqs, Exec["build selinux policy package ${name} if source changed"] ]),
       }
-    
+
       if $load {
         selmodule { $name:
           ensure      => present,
@@ -80,6 +92,5 @@ define selinux::module::redhat (
     }
     default: { fail "${ensure} must be 'present' or 'absent'" }
   }
-
 
 }
