@@ -31,6 +31,7 @@ define selinux::module (
   $dest='/usr/share/selinux/targeted/',
   $content=undef,
   $source=undef,
+  $withfc=false,
   $load=true,
 ) {
 
@@ -44,6 +45,7 @@ define selinux::module (
         dest    => $dest,
         content => $content,
         source  => $source,
+        withfc  => $withfc,
         load    => $load,
       }
     }
