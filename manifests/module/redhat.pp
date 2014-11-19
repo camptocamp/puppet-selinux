@@ -46,7 +46,7 @@ define selinux::module::redhat (
         }
       }
 
-      $build_reqs = $::lsbmajdistrelease  ? {
+      $build_reqs = $::operatingsystemmajrelease  ? {
         /5|7/ => [File["${dest}/${name}.te"], Package['checkpolicy'], Package ['selinux-policy-devel']],
         '6'   => [File["${dest}/${name}.te"], Package['checkpolicy']],
       }

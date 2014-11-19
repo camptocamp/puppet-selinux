@@ -17,7 +17,7 @@ class selinux::base {
   case $::osfamily {
     RedHat: {
 
-      case $::lsbmajdistrelease {
+      case $::operatingsystemmajrelease {
 
         '7': {
           package { 'policycoreutils-python':
