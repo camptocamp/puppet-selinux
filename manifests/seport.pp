@@ -24,24 +24,24 @@ define selinux::seport($port, $ensure='present', $proto='tcp', $setype=undef) {
 
   # this is dreadful to read, sorry...
 
-  if $ensure == 'present' {
-    $mgt  = '--add'
-    $grep = 'egrep -q'
-  } else {
-    $mgt  = '--delete'
-    $grep = '! egrep -q'
-  }
-
   if $setype == undef {
     $type = $name
   } else {
     $type = $setype
   }
 
+  if $ensure == 'present' {
+    $cmd  = "semanage port --add --type ${type} --proto ${proto} ${port} || semanage port --modify --type ${type} --proto ${proto} ${port}"
+    $grep = 'egrep -q'
+  } else {
+    $cmd  = "semanage port --delete --type ${type} --proto ${proto} ${port}"
+    $grep = '! egrep -q'
+  }
+
   $re = "^${type}\\W+${proto}\\W+.*\\W${port}(\\W|$)"
 
   exec { "semanage port ${port}, proto ${proto}, type ${name}":
-    command => "semanage port ${mgt} --type ${type} --proto ${proto} ${port}",
+    command => $cmd,
     # subshell required to invert return status with !
     unless  => "semanage port --list | ( ${grep} '${re}' )",
   }
