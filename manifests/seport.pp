@@ -41,6 +41,7 @@ define selinux::seport($port, $ensure='present', $proto='tcp', $setype=undef) {
   $re = "^${type}\\W+${proto}\\W+.*\\W${port}(\\W|$)"
 
   exec { "semanage port ${port}, proto ${proto}, type ${name}":
+    path    => $::path,
     command => $cmd,
     # subshell required to invert return status with !
     unless  => "semanage port --list | ( ${grep} '${re}' )",
