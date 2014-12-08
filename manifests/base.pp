@@ -15,7 +15,7 @@ class selinux::base {
   package { ['checkpolicy', 'policycoreutils']: ensure => present }
 
   case $::osfamily {
-    RedHat: {
+    'RedHat': {
 
       case $::operatingsystemmajrelease {
 
@@ -65,14 +65,7 @@ class selinux::base {
       }
     }
 
-    Fedora: {
-      case $::lsbdistcodename {
-        Cambridge: { $rubypkg_alias = 'libselinux-ruby' }
-        default:   { $rubypkg_alias = 'libselinux-ruby-puppet' }
-      }
-    }
-
-    Debian: {
+    'Debian': {
       case $::lsbdistcodename {
         sid, squeeze: { $rubypkg_alias = 'libselinux-ruby1.8' }
         default:      { $rubypkg_alias = 'libselinux-puppet-ruby1.8' }
