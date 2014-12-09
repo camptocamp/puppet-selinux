@@ -18,6 +18,10 @@
 #     setype    => "httpd_sys_content_t"
 #   }
 #
+# This will add a line (between the #), to the configuration
+# ini the output of: semanage fcontext --list
+#/var/www(/.*)?                                     all files          system_u:object_r:httpd_sys_content_t:s0 # lint:ignore:80chars
+#
 define selinux::fcontext(
   $setype,
   $ensure    = 'present',
@@ -26,7 +30,7 @@ define selinux::fcontext(
 
   $path = $name
 
-  $re = "^${path}\\s+.*\\s+\\w+:\\w+:${setype}:s0"
+  $re = "^${path}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
 
   if $recursive {
     $path_glob = '(/.*)?'
@@ -36,7 +40,7 @@ define selinux::fcontext(
 
   if $ensure == 'present' {
     $semanage = '--add'
-    $grep     = 'egrep -q'
+    $grep     = 'egrep'
   } else {
       $semanage = '--delete'
       $grep     = '! egrep -q'
@@ -45,7 +49,7 @@ define selinux::fcontext(
   exec { "semanage fcontext ${setype} ${path}${path_glob}":
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
     command => "semanage fcontext -a -t ${setype} \"${path}${path_glob}\"",
-    unless  => "semanage fcontext --list | ( ${grep} '${re}' )"
+    unless  => "semanage fcontext --list | ( ${grep} '${re}' >/dev/null)"
   }
 
   exec { "restorecon -R ${path}":
