@@ -40,7 +40,7 @@ define selinux::fcontext(
 
   if $ensure == 'present' {
     $semanage = '--add'
-    $grep     = 'egrep -q'
+    $grep     = 'egrep'
   } else {
       $semanage = '--delete'
       $grep     = '! egrep -q'
@@ -49,7 +49,7 @@ define selinux::fcontext(
   exec { "semanage fcontext ${setype} ${path}${path_glob}":
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
     command => "semanage fcontext -a -t ${setype} \"${path}${path_glob}\"",
-    unless  => "semanage fcontext --list | ( ${grep} '${re}' )"
+    unless  => "semanage fcontext --list | ( ${grep} '${re}' >/dev/null)"
   }
 
   exec { "restorecon -R ${path}":
