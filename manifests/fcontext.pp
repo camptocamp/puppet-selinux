@@ -18,6 +18,10 @@
 #     setype    => "httpd_sys_content_t"
 #   }
 #
+# This will add a line (between the #), to the configuration
+# ini the output of: semanage fcontext --list
+#/var/www(/.*)?                                     all files          system_u:object_r:httpd_sys_content_t:s0 # lint:ignore:80chars
+#
 define selinux::fcontext(
   $setype,
   $ensure    = 'present',
