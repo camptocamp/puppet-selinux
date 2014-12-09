@@ -26,7 +26,7 @@ define selinux::fcontext(
 
   $path = $name
 
-  $re = "^${path}\\s+.*\\s+\\w+:\\w+:${setype}:s0"
+  $re = "^${path}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0"
 
   if $recursive {
     $path_glob = '(/.*)?'
