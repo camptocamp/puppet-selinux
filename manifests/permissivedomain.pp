@@ -21,6 +21,7 @@ define selinux::permissivedomain( $ensure='present' ) {
 
   exec { "semanage permissive ${action} ${name}":
     command => "semanage permissive ${action} '${name}'",
+    path    => $::path,
     onlyif  => $onlyif,
     unless  => $unless,
   }
