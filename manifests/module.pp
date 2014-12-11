@@ -61,7 +61,7 @@ define selinux::module (
       }
     }
 
-    default: { fail("${::operatingsystem} is not supportted.") }
+    default: { fail("${::operatingsystem} is not supported.") }
 
   }
 
