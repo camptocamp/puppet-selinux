@@ -56,12 +56,14 @@ define selinux::module::redhat (
       exec { "build selinux policy package ${name} if source changed":
         cwd         => $dest,
         command     => $make_cmd,
+        path        => $::path,
         require     => $build_reqs,
         refreshonly => true,
       }
       exec { "build selinux policy package ${name} if .pp missing":
         cwd     => $dest,
         command => $make_cmd,
+        path    => $::path,
         creates => "${dest}/${name}.pp",
         require => flatten([ $build_reqs, Exec["build selinux policy package ${name} if source changed"] ]),
       }
