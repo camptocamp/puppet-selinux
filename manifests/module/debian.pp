@@ -46,6 +46,7 @@ define selinux::module::debian (
       exec { "build selinux policy module ${name}":
         cwd     => $workdir,
         command => "checkmodule -M -m ${name}.te -o ${name}.mod",
+        path    => $::path,
         onlyif  => "semodule -l | grep -q -P \"^${name}\t\"$(head -n1 ${name}.te | grep -o -e \"[0-9\\.]*\")",
         require => [File["${workdir}/${name}.te"], Package['checkpolicy']],
         notify  => Exec["build selinux policy package ${name}"],
@@ -54,6 +55,7 @@ define selinux::module::debian (
       exec { "build selinux policy package ${name}":
         cwd         => $workdir,
         command     => "semodule_package -o ${dest}/${name}.pp -m ${name}.mod",
+        path    => $::path,
         refreshonly => true,
         require     => [
           Exec["build selinux policy module ${name}"],

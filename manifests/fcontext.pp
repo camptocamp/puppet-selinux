@@ -8,6 +8,7 @@
 # - *$ensure*: present/absent
 # - *$recursive*: apply to all subdirectories
 # - *$setype*: security context name
+# - *$refreshonly*: if true, restorecon only runs if something changed
 #
 # Example usage:
 #
@@ -26,6 +27,7 @@ define selinux::fcontext(
   $setype,
   $ensure    = 'present',
   $recursive = true,
+  $refreshonly = true,
 ) {
 
   $path = $name
@@ -50,11 +52,11 @@ define selinux::fcontext(
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
     command => "semanage fcontext -a -t ${setype} \"${path}${path_glob}\"",
     unless  => "semanage fcontext --list | ( ${grep} '${re}' >/dev/null)"
-  }
-
+  } ~>
   exec { "restorecon -R ${path}":
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
-    command => "restorecon -R ${path}"
+    command => "restorecon -R ${path}",
+    refreshonly => $refreshonly,
   }
 
 }
