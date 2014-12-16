@@ -27,6 +27,7 @@ define selinux::module::redhat (
   $load=true,
 ) {
 
+  # lint:ignore:80chars
   case $ensure {
     present: {
       file { "${dest}/${name}.te":
@@ -76,6 +77,7 @@ define selinux::module::redhat (
         }
       }
     }
+    # lint:endignore
     absent: {
       file {[
         "${dest}/${name}.te",
