@@ -31,7 +31,7 @@ define selinux::seport($port, $ensure='present', $proto='tcp', $setype=undef) {
   }
 
   if $ensure == 'present' {
-    $cmd  = "semanage port --add --type ${type} --proto ${proto} ${port} || semanage port --modify --type ${type} --proto ${proto} ${port}"
+    $cmd  = "semanage port --add --type ${type} --proto ${proto} ${port} || semanage port --modify --type ${type} --proto ${proto} ${port}" # lint:ignore:80chars
     $grep = 'egrep -q'
   } else {
     $cmd  = "semanage port --delete --type ${type} --proto ${proto} ${port}"
