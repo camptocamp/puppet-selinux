@@ -1,4 +1,8 @@
-## 2014-12-08 Reelase 0.1.3
+## 2014-12-16 Release 0.1.4
+
+Fix bugs
+
+## 2014-12-08 Relase 0.1.3
 
 Fix path in exec
 
