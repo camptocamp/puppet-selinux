@@ -67,7 +67,7 @@ class selinux::base {
 
     'Debian': {
       case $::lsbdistcodename {
-        sid, squeeze: { $rubypkg_alias = 'libselinux-ruby1.8' }
+        'sid', 'squeeze': { $rubypkg_alias = 'libselinux-ruby1.8' }
         default:      { $rubypkg_alias = 'libselinux-puppet-ruby1.8' }
       }
     }

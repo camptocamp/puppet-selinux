@@ -26,7 +26,7 @@ define selinux::module::debian (
 ) {
 
   case $ensure {
-    present: {
+    'present': {
       if !defined(File[$workdir]) {
         file { $workdir:
           ensure => directory,
@@ -71,7 +71,7 @@ define selinux::module::debian (
         }
       }
     }
-    absent: {
+    'absent': {
       file {[
         "${workdir}/${name}.te",
         "${workdir}/${name}.mod",
