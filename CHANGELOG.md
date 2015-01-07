@@ -1,3 +1,7 @@
+## 2015-01-07 - Release 0.1.7
+
+Fix unquoted strings in cases
+
 ## 2014-12-18 - Release 0.1.5
 
 Various improvements in unit tests
