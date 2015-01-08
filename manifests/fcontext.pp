@@ -37,7 +37,9 @@ define selinux::fcontext(
   if $recursive {
     $path_glob = '(/.*)?'
   } else {
+    # lint:ignore:empty_string_assignment
     $path_glob = ''
+    # lint:endignore
   }
 
   if $ensure == 'present' {
