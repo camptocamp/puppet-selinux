@@ -31,7 +31,7 @@ define selinux::module::redhat (
   case $ensure {
     'present': {
       file { "${dest}/${name}.te":
-        ensure  => present,
+        ensure  => file,
         content => $content,
         source  => $source,
         notify  => Exec["build selinux policy package ${name} if source changed"],
@@ -40,7 +40,7 @@ define selinux::module::redhat (
       # if there is source for file context configuration
       if $withfc {
         file{ "${dest}/${name}.fc":
-          ensure  => present,
+          ensure  => file,
           content => $content,
           source  => regsubst( $source, '(.*)\.te', '\1.fc' ),
           notify  => Exec["build selinux policy package ${name} if source changed"],

@@ -36,7 +36,7 @@ define selinux::module::debian (
       }
 
       file { "${workdir}/${name}.te":
-        ensure  => present,
+        ensure  => file,
         content => $content,
         source  => $source,
         require => File[$workdir],
