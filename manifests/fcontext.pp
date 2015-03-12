@@ -57,7 +57,7 @@ define selinux::fcontext(
     command => "semanage fcontext -a -t ${setype} \"${path}${path_glob}\"",
     unless  => "semanage fcontext --list | ( ${grep} '${re}' >/dev/null)",
   } ~>
-  exec { "restorecon -R ${path_rc}":
+  exec { "restorecon -R ${path}":
     path        => '/usr/bin:/usr/sbin:/bin:/sbin',
     command     => "restorecon -R ${path_rc}",
     refreshonly => $refreshonly,
