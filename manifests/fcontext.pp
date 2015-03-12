@@ -50,7 +50,7 @@ define selinux::fcontext(
       $grep     = '! egrep -q'
   }
 
-  $path_rc = regsubst( $path, '$(.*)\(.*', '\1' )
+  $path_rc = regsubst( $path, '^(.*)\(.*', '\1' )
 
   exec { "semanage fcontext ${setype} ${path}${path_glob}":
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
