@@ -1,3 +1,8 @@
+## 2015-03-13 - Release 0.1.8
+
+Fix error with (\.*) in fcontext path
+Add RedHat 7 to supported versions
+
 ## 2015-01-07 - Release 0.1.7
 
 Fix unquoted strings in cases
