@@ -50,6 +50,8 @@ define selinux::fcontext(
       $grep     = '! egrep -q'
   }
 
+  $path_rc = regsubst( $path, '^(.*)\(.*', '\1' )
+
   exec { "semanage fcontext ${setype} ${path}${path_glob}":
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
     command => "semanage fcontext -a -t ${setype} \"${path}${path_glob}\"",
@@ -57,7 +59,7 @@ define selinux::fcontext(
   } ~>
   exec { "restorecon -R ${path}":
     path        => '/usr/bin:/usr/sbin:/bin:/sbin',
-    command     => "restorecon -R ${path}",
+    command     => "restorecon -R ${path_rc}",
     refreshonly => $refreshonly,
   }
 
