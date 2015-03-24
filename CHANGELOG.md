@@ -1,3 +1,7 @@
+## 2015-03-24 - Release 0.1.9
+
+Update Gemfile
+
 ## 2015-03-13 - Release 0.1.8
 
 Fix error with (\.*) in fcontext path
