@@ -39,10 +39,14 @@ define selinux::module::redhat (
 
       # if there is source for file context configuration
       if $withfc {
+        $_source = $source ? {
+          undef   => undef,
+          default => regsubst( $source, '(.*)\.te', '\1.fc' ),
+        }
         file{ "${dest}/${name}.fc":
           ensure  => file,
           content => $content,
-          source  => regsubst( $source, '(.*)\.te', '\1.fc' ),
+          source  => $_source,
           notify  => Exec["build selinux policy package ${name} if source changed"],
         }
       }
