@@ -1,3 +1,7 @@
+## 2015-04-29 - Release 0.1.12
+
+Fix when using selinux::module::redhat with wthfc and content
+
 ## 2015-04-27 - Release 0.1.11
 
 Add nodeset ubuntu-12.04-x86_64-openstack
