@@ -1,3 +1,7 @@
+## 2015-05-12 - Release 0.1.13
+
+Don't pin beaker
+
 ## 2015-04-29 - Release 0.1.12
 
 Fix when using selinux::module::redhat with wthfc and content
