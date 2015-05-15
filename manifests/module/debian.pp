@@ -39,6 +39,9 @@ define selinux::module::debian (
         ensure  => file,
         content => $content,
         source  => $source,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
         require => File[$workdir],
         notify  => Exec["build selinux policy module ${name}"],
       }

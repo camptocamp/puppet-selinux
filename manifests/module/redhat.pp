@@ -34,6 +34,9 @@ define selinux::module::redhat (
         ensure  => file,
         content => $content,
         source  => $source,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
         notify  => Exec["build selinux policy package ${name} if source changed"],
       }
 
@@ -47,6 +50,9 @@ define selinux::module::redhat (
           ensure  => file,
           content => $content,
           source  => $_source,
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
           notify  => Exec["build selinux policy package ${name} if source changed"],
         }
       }
