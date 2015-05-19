@@ -1,3 +1,7 @@
+## 2015-05-19 - Release 0.1.15
+
+Add missing ownership
+
 ## 2015-05-13 - Release 0.1.14
 
 Add puppet-lint-file_source_rights-check gem
