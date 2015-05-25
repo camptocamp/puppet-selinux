@@ -1,3 +1,7 @@
+## 2015-05-25 - Release 0.1.16
+
+Don't allow failure on Puppet 4
+
 ## 2015-05-19 - Release 0.1.15
 
 Add missing ownership
