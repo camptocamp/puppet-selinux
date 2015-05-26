@@ -1,3 +1,7 @@
+## 2015-05-26 - Release 0.1.18
+
+Use random application order in nodeset
+
 ## 2015-05-26 - Release 0.1.17
 
 add utopic & vivid nodesets
