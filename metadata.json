@@ -1,6 +1,6 @@
 {
   "name": "camptocamp-selinux",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "author": "Camptocamp",
   "summary": "Puppet SELinux module",
   "license": "Apache-2.0",
