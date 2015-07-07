@@ -31,22 +31,29 @@ define selinux::module (
   $dest='/usr/share/selinux/targeted/',
   $content=undef,
   $source=undef,
+  $contentfc=undef,
+  $sourcefc=undef,
   $withfc=false,
   $load=true,
 ) {
 
   validate_bool($load)
 
+  if str2bool($withfc) == true {
+    fail("${name} : \$withfc is deprecated. Use contentfc or sourcefc instead!")
+  }
+
   case $::osfamily {
 
     'RedHat': {
       selinux::module::redhat{ $name:
-        ensure  => $ensure,
-        dest    => $dest,
-        content => $content,
-        source  => $source,
-        withfc  => $withfc,
-        load    => $load,
+        ensure    => $ensure,
+        dest      => $dest,
+        content   => $content,
+        source    => $source,
+        contentfc => $contentfc,
+        sourcefc  => $sourcefc,
+        load      => $load,
       }
     }
 
