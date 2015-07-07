@@ -40,7 +40,7 @@ define selinux::module (
   validate_bool($load)
 
   if str2bool($withfc) == true {
-    fail("${name} : \$withfc is deprecated. Use contentfc or sourcefc instead!")
+    warning("${name} : \$withfc is deprecated. Use contentfc or sourcefc instead!")
   }
 
   case $::osfamily {
@@ -53,6 +53,7 @@ define selinux::module (
         source    => $source,
         contentfc => $contentfc,
         sourcefc  => $sourcefc,
+        withfc    => $withfc,
         load      => $load,
       }
     }

@@ -25,6 +25,7 @@ define selinux::module::redhat (
   $source=undef,
   $contentfc=undef,
   $sourcefc=undef,
+  $withfc=false,
   $load=true,
 ) {
 
@@ -47,6 +48,21 @@ define selinux::module::redhat (
           ensure  => file,
           content => $contentfc,
           source  => $sourcefc,
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
+          notify  => Exec["build selinux policy package ${name} if source changed"],
+        }
+      } elsif $withfc {
+        $_sourcefc = $sourcefc ? {
+          undef   => undef,
+          default => regsubst( $source, '(.*)\.te', '\1.fc' ),
+        }
+
+        file{ "${dest}/${name}.fc":
+          ensure  => file,
+          content => $contentfc,
+          source  => $_sourcefc,
           owner   => 'root',
           group   => 'root',
           mode    => '0644',
