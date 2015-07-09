@@ -1,3 +1,7 @@
+## 2015-07-09 - Release 0.1.21
+
+Allow to use separate source for content for fc file
+
 ## 2015-06-26 - Release 0.1.20
 
 Fix strict_variables activation with rspec-puppet 2.2
