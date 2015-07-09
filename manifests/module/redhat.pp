@@ -15,14 +15,16 @@
 #   "/usr/share/selinux/targeted/"
 # - *content*: inline content or template of the module source
 # - *source*: file:// or puppet:// URI of the module source file
-# - *withfc*: true if there is a file context source file
-#
+# - *contentfc*: inline content or template of the module file context source
+# - *sourcefc*: file:// or puppet:// URI of the module file context source file
 #
 define selinux::module::redhat (
   $ensure=present,
   $dest='/usr/share/selinux/targeted/',
   $content=undef,
   $source=undef,
+  $contentfc=undef,
+  $sourcefc=undef,
   $withfc=false,
   $load=true,
 ) {
@@ -41,15 +43,26 @@ define selinux::module::redhat (
       }
 
       # if there is source for file context configuration
-      if $withfc {
-        $_source = $source ? {
+      if $sourcefc or $contentfc {
+        file{ "${dest}/${name}.fc":
+          ensure  => file,
+          content => $contentfc,
+          source  => $sourcefc,
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
+          notify  => Exec["build selinux policy package ${name} if source changed"],
+        }
+      } elsif $withfc {
+        $_sourcefc = $sourcefc ? {
           undef   => undef,
           default => regsubst( $source, '(.*)\.te', '\1.fc' ),
         }
+
         file{ "${dest}/${name}.fc":
           ensure  => file,
-          content => $content,
-          source  => $_source,
+          content => $contentfc,
+          source  => $_sourcefc,
           owner   => 'root',
           group   => 'root',
           mode    => '0644',
