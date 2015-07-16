@@ -1,3 +1,7 @@
+## 2015-07-16 - Release 0.1.22
+
+Fix double / in target path
+
 ## 2015-07-09 - Release 0.1.21
 
 Allow to use separate source for content for fc file
