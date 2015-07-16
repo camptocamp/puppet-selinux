@@ -19,7 +19,7 @@
 define selinux::module::debian (
   $ensure=present,
   $workdir='/etc/puppet/selinux',
-  $dest='/usr/share/selinux/targeted/',
+  $dest='/usr/share/selinux/targeted',
   $content=undef,
   $source=undef,
   $load=true,

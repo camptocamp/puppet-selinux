@@ -20,7 +20,7 @@
 #
 define selinux::module::redhat (
   $ensure=present,
-  $dest='/usr/share/selinux/targeted/',
+  $dest='/usr/share/selinux/targeted',
   $content=undef,
   $source=undef,
   $contentfc=undef,
