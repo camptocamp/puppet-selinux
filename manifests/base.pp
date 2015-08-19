@@ -76,8 +76,8 @@ class selinux::base {
 
   # if needed, you can fetch and build libselinux-ruby-puppet from
   # http://github.com/twpayne/libselinux-ruby-puppet
-  package { $rubypkg_alias:
+  package { 'selinux-ruby-bindings':
     ensure => present,
-    alias  => 'selinux-ruby-bindings',
+    name   => $rubypkg_alias,
   }
 }
