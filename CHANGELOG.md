@@ -1,3 +1,7 @@
+## 2015-08-21 - Release 0.1.23
+
+Use docker for acceptance tests
+
 ## 2015-07-16 - Release 0.1.22
 
 Fix double / in target path
