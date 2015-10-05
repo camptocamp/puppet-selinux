@@ -50,7 +50,7 @@ class selinux::base {
             default: {
               package { 'libselinux-ruby-puppet':
                 ensure => absent,
-                before => Package['libselinux-ruby'],
+                before => Package['selinux-ruby-bindings'],
               }
               $rubypkg_alias = 'libselinux-ruby'
             }
