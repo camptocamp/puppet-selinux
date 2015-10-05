@@ -1,3 +1,7 @@
+## 2015-09-05 - Release 0.1.24
+
+Fix for puppet4
+
 ## 2015-08-21 - Release 0.1.23
 
 Use docker for acceptance tests
