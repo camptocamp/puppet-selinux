@@ -16,7 +16,7 @@ describe Puppet::Type.type(:selinux_fcontext) do
             expect(described_class.attrtype(param)).to eq(:param)
           end
         end
-        [ :ensure, :context ].each do |prop|
+        [ :ensure, :seluser, :selrole, :seltype, :selrange ].each do |prop|
           it "should have a #{prop} property" do
             expect(described_class.attrtype(prop)).to eq(:property)
           end

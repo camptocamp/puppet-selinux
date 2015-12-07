@@ -42,9 +42,12 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
         end
         it 'should return / file' do
           expect(described_class.instances[0].instance_variable_get("@property_hash")).to eq( {
-            :ensure    => :present,
-            :name      => '/',
-            :context   => 'system_u:object_r:root_t:s0',
+            :ensure   => :present,
+            :name     => '/',
+            :seluser  => 'system_u',
+            :selrole  => 'object_r',
+            :seltype  => 'root_t',
+            :selrange => 's0',
           } )
         end
       end
@@ -60,9 +63,12 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
         end
         it 'should return /.*' do
           expect(described_class.instances[1].instance_variable_get("@property_hash")).to eq( {
-            :ensure    => :present,
-            :name      => '/.*',
-            :context   => 'system_u:object_r:default_t:s0',
+            :ensure   => :present,
+            :name     => '/.*',
+            :seluser  => 'system_u',
+            :selrole  => 'object_r',
+            :seltype  => 'default_t',
+            :selrange => 's0',
           } )
         end
       end

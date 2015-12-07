@@ -7,7 +7,19 @@ Puppet::Type.newtype(:selinux_fcontext) do
     desc "The default namevar."
   end
 
-  newproperty(:context) do
-    desc "The SELinux context to apply."
+  newproperty(:seluser) do
+    desc "The SELinux user to apply."
+  end
+
+  newproperty(:selrole) do
+    desc "The SELinux role to apply."
+  end
+
+  newproperty(:seltype) do
+    desc "The SELinux type to apply."
+  end
+
+  newproperty(:selrange) do
+    desc "The SELinux range to apply."
   end
 end
