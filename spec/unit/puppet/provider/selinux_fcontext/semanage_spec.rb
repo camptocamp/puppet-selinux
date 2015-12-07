@@ -72,6 +72,30 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
           } )
         end
       end
+
+      context 'when adding a new entry with only seltype' do
+        let(:resource) do
+          Puppet::Type.type(:selinux_fcontext).new(
+            {
+              :name     => '/web(/.*)?',
+              :provider => 'semanage',
+              :seltype  => 'httpd_sys_content_t',
+            }
+          )
+        end
+
+        let(:provider) do
+          resource.provider
+        end
+
+        before :each do
+          described_class.expects(:semanage).with(['fcontext', '-a', '--type', 'httpd_sys_content_t', '"/web(/.*)?"'])
+        end
+
+        it 'should create a new entry' do
+          provider.create
+        end
+      end
     end
   end
 end

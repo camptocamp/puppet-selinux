@@ -31,4 +31,14 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
   def exists?
     @property_hash[:ensure] == :present
   end
+
+  def create
+    args = ['fcontext', '-a']
+    args << ['--seuser', resource[:seluser]] if resource[:seluser]
+    args << ['--role', resource[:selrole]] if resource[:selrole]
+    args << ['--type', resource[:seltype]] if resource[:seltype]
+    args << ['--range', resource[:selrange]] if resource[:selrange]
+    args << "\"#{resource[:name]}\""
+    semanage(args.flatten)
+  end
 end
