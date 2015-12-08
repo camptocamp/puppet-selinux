@@ -21,3 +21,13 @@ selinux_fcontext { '/web(/.*)?':
   seltype => 'httpd_sys_content_t',
 }
 ```
+
+### selinux\_permissive
+
+Manage processes type enforcement mode.
+
+```puppet
+selinux_permissive { 'httpd_t':
+  ensure => present,
+}
+```
