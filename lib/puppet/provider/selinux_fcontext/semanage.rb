@@ -5,7 +5,7 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
   mk_resource_methods
 
   def self.instances
-    semanage('fcontext', '-n', '-l', '-C').split("\n").map do |fcontext|
+    semanage(['fcontext', '-n', '-l', '-C']).split("\n").map do |fcontext|
       name, context = fcontext.split.values_at(0, -1)
       seluser, selrole, seltype, selrange = context.split(':')
       new({

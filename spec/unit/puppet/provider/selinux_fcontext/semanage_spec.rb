@@ -25,14 +25,14 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
 
       context 'without file contexts' do
         it 'should return no resources' do
-          described_class.expects(:semanage).with('fcontext', '-n', '-l', '-C').returns ''
+          described_class.expects(:semanage).with(['fcontext', '-n', '-l', '-C']).returns ''
           expect(described_class.instances.size).to eq(0)
         end
       end
 
       context 'with a file context' do
         before :each do
-          described_class.expects(:semanage).with('fcontext', '-n', '-l', '-C').returns \
+          described_class.expects(:semanage).with(['fcontext', '-n', '-l', '-C']).returns \
             '/                                                  directory          system_u:object_r:root_t:s0 '
         end
         it 'should return one resource' do
@@ -52,7 +52,7 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
 
       context 'with two file contexts' do
         before :each do
-          described_class.expects(:semanage).with('fcontext', '-n', '-l', '-C').returns \
+          described_class.expects(:semanage).with(['fcontext', '-n', '-l', '-C']).returns \
             '/                                                  directory          system_u:object_r:root_t:s0 
 /.*                                                all files          system_u:object_r:default_t:s0 '
         end
