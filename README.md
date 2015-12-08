@@ -31,3 +31,13 @@ selinux_permissive { 'httpd_t':
   ensure => present,
 }
 ```
+
+### selinux\_port
+
+Manage network port type definitions.
+
+```puppet
+selinux_port { 'http_port_t+tcp':
+  port => '81',
+}
+```
