@@ -73,7 +73,38 @@ afs_client_port_t              udp      7001
 
       context 'when manipulating objects' do
         let(:resource) do
-          Puppet::Type.type(:selinux_port).new({:title => 'http_port_t/tcp', :port => '81', :provider => 'semanage'})
+          Puppet::Type.type(:selinux_port).new({:name => 'http_port_t/tcp', :port => '81', :provider => 'semanage'})
+        end
+
+        let(:provider) do
+          resource.provider
+        end
+
+        context 'when allowing Apache to listen on tcp port 81' do
+          it 'should call `semanage port -a -t http_port_t -p tcp 81`' do
+            provider.expects(:semanage).with(['port', '-a', 'http_port_t', '-p', 'tcp', '81'])
+            provider.create
+          end
+        end
+
+        context 'when disallowing Apache to listen on tcp port 81' do
+          it 'should call `semanage port -d http_port_t -p tcp 81`' do
+            provider.expects(:semanage).with(['port', '-d', 'http_port_t', '-p', 'tcp', '81'])
+            provider.destroy
+          end
+        end
+
+        context 'when modifying an port' do
+          it 'should call `semanage port -m http_port_t -p tcp 80`' do
+            provider.expects(:semanage).with(['port', '-m', 'http_port_t', '-p', 'tcp', '80'])
+            provider.port = '80'
+          end
+        end
+      end
+
+      context 'when not using composite namevar' do
+        let(:resource) do
+          Puppet::Type.type(:selinux_port).new({:name => 'myport', :seltype => 'http_port_t', :proto => 'tcp', :port => '81', :provider => 'semanage'})
         end
 
         let(:provider) do

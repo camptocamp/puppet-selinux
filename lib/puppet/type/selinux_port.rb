@@ -3,6 +3,10 @@ Puppet::Type.newtype(:selinux_port) do
 
   ensurable
 
+  newparam(:name, :namevar => true) do
+    desc "The default namevar."
+  end
+
   newparam(:seltype, :namevar => true) do
     desc "SELinux Type for the object."
     newvalues(/_port_t$/)
@@ -17,14 +21,17 @@ Puppet::Type.newtype(:selinux_port) do
   def self.title_patterns
     [
       [
-        /^(\S+)\/(\S+)$/,
+        /^((\S+)\/(\S+))$/,
         [
+          [ :name, lambda{|x| x} ],
           [ :seltype, lambda{|x| x} ],
           [ :proto, lambda{|x| x} ],
         ],
+      ],
+      [
         /(.*)/,
         [
-          [ :seltype, lambda{|x| x} ],
+          [ :name, lambda{|x| x} ],
         ],
       ],
     ]
