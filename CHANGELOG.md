@@ -1,3 +1,7 @@
+## 2015-09-08 - Release 0.2.0
+
+Add Types and Providers
+
 ## 2015-09-05 - Release 0.1.24
 
 Fix for puppet4
