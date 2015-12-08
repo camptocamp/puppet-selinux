@@ -1,5 +1,5 @@
 Puppet::Type.newtype(:selinux_fcontext) do
-  @doc = "Manage SELinux file contexts."
+  @doc = "Manage SELinux file context mapping definitions."
 
   ensurable
 
