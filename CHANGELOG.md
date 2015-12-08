@@ -1,3 +1,7 @@
+## 2015-09-08 - Release 0.2.1
+
+Use '/' instead of '+' for protocol separator
+
 ## 2015-09-08 - Release 0.2.0
 
 Add Types and Providers
