@@ -47,7 +47,7 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
   def destroy
     semanage(['fcontext', '-d', "\"#{resource[:name]}\""])
     restorecon(['-R', resource[:name].split('(')[0]])
-    @property_hash[:ensure] == :absent
+    @property_hash.clear
   end
 
   def initialize(value={})
