@@ -38,14 +38,14 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
     args << ['--role', resource[:selrole]] if resource[:selrole]
     args << ['--type', resource[:seltype]] if resource[:seltype]
     args << ['--range', resource[:selrange]] if resource[:selrange]
-    args << "\"#{resource[:name]}\""
+    args << resource[:name]
     semanage(args.flatten)
     restorecon(['-R', resource[:name].split('(')[0]])
     @property_hash[:ensure] == :present
   end
 
   def destroy
-    semanage(['fcontext', '-d', "\"#{resource[:name]}\""])
+    semanage(['fcontext', '-d', resource[:name]])
     restorecon(['-R', resource[:name].split('(')[0]])
     @property_hash.clear
   end
@@ -78,7 +78,7 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
       args << ['--role', @property_flush[:selrole]] if @property_flush[:selrole]
       args << ['--type', @property_flush[:seltype]] if @property_flush[:seltype]
       args << ['--range', @property_flush[:selrange]] if @property_flush[:selrange]
-      args << "\"#{resource[:name]}\""
+      args << resource[:name]
       semanage(args.flatten)
       restorecon(['-R', resource[:name].split('(')[0]])
       @property_hash = resource.to_hash

@@ -87,7 +87,7 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
 
       context 'when creating an fcontext' do
         it 'should create a new entry' do
-          provider.expects(:semanage).with(['fcontext', '-a', '--type', 'httpd_sys_content_t', '"/web(/.*)?"'])
+          provider.expects(:semanage).with(['fcontext', '-a', '--type', 'httpd_sys_content_t', '/web(/.*)?'])
           provider.expects(:restorecon).with(['-R', '/web'])
           provider.create
         end
@@ -102,7 +102,7 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
 
       context 'when destroying an fcontext' do
         it 'should destroy an entry' do
-          provider.expects(:semanage).with(['fcontext', '-d', '"/web(/.*)?"'])
+          provider.expects(:semanage).with(['fcontext', '-d', '/web(/.*)?'])
           provider.expects(:restorecon).with(['-R', '/web'])
           provider.destroy
         end
@@ -110,28 +110,28 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
 
       context 'when modifying an fcontext' do
         it 'should update the seluser' do
-          provider.expects(:semanage).with(['fcontext', '-m', '--seuser', 'user_u', '"/web(/.*)?"'])
+          provider.expects(:semanage).with(['fcontext', '-m', '--seuser', 'user_u', '/web(/.*)?'])
           provider.expects(:restorecon).with(['-R', '/web'])
           provider.seluser = 'user_u'
           provider.flush
         end
 
         it 'should update the selrole' do
-          provider.expects(:semanage).with(['fcontext', '-m', '--role', 'object_r', '"/web(/.*)?"'])
+          provider.expects(:semanage).with(['fcontext', '-m', '--role', 'object_r', '/web(/.*)?'])
           provider.expects(:restorecon).with(['-R', '/web'])
           provider.selrole = 'object_r'
           provider.flush
         end
 
         it 'should update the seltype' do
-          provider.expects(:semanage).with(['fcontext', '-m', '--type', 'default_t', '"/web(/.*)?"'])
+          provider.expects(:semanage).with(['fcontext', '-m', '--type', 'default_t', '/web(/.*)?'])
           provider.expects(:restorecon).with(['-R', '/web'])
           provider.seltype = 'default_t'
           provider.flush
         end
 
         it 'should update the selrange' do
-          provider.expects(:semanage).with(['fcontext', '-m', '--range', 's0-s0:c0.c1023', '"/web(/.*)?"'])
+          provider.expects(:semanage).with(['fcontext', '-m', '--range', 's0-s0:c0.c1023', '/web(/.*)?'])
           provider.expects(:restorecon).with(['-R', '/web'])
           provider.selrange = 's0-s0:c0.c1023'
           provider.flush
