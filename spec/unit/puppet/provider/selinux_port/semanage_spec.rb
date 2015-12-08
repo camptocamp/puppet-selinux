@@ -42,7 +42,7 @@ describe Puppet::Type.type(:selinux_port).provider(:semanage) do
         it 'should return / file' do
           expect(described_class.instances[0].instance_variable_get("@property_hash")).to eq( {
             :ensure  => :present,
-            :name    => 'afs_bos_port_t+udp',
+            :name    => 'afs_bos_port_t/udp',
             :seltype => 'afs_bos_port_t',
             :proto   => 'udp',
             :port    => '7007',
@@ -63,7 +63,7 @@ afs_client_port_t              udp      7001
         it 'should return /.*' do
           expect(described_class.instances[1].instance_variable_get("@property_hash")).to eq( {
             :ensure  => :present,
-            :name    => 'afs_client_port_t+udp',
+            :name    => 'afs_client_port_t/udp',
             :seltype => 'afs_client_port_t',
             :proto   => 'udp',
             :port    => '7001',
@@ -73,7 +73,7 @@ afs_client_port_t              udp      7001
 
       context 'when manipulating objects' do
         let(:resource) do
-          Puppet::Type.type(:selinux_port).new({:title => 'http_port_t+tcp', :port => '81', :provider => 'semanage'})
+          Puppet::Type.type(:selinux_port).new({:title => 'http_port_t/tcp', :port => '81', :provider => 'semanage'})
         end
 
         let(:provider) do

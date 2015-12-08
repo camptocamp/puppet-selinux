@@ -9,7 +9,7 @@ Puppet::Type.type(:selinux_port).provide(:semanage) do
       seltype, proto, port = port.split
       new({
         :ensure  => :present,
-        :name    => "#{seltype}+#{proto}",
+        :name    => "#{seltype}/#{proto}",
         :seltype => seltype,
         :proto   => proto,
         :port    => port,

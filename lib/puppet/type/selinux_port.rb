@@ -17,7 +17,7 @@ Puppet::Type.newtype(:selinux_port) do
   def self.title_patterns
     [
       [
-        /^(\S+)\+(\S+)$/,
+        /^(\S+)\/(\S+)$/,
         [
           [ :seltype, lambda{|x| x} ],
           [ :proto, lambda{|x| x} ],
