@@ -9,3 +9,15 @@ Overview
 
 This module allows to manage SELinux with Puppet.
 
+Types
+-----
+
+### selinux\_fcontext
+
+Manage file context mapping definitions.
+
+```puppet
+selinux_fcontext { '/web(/.*)?':
+  seltype => 'httpd_sys_content_t',
+}
+```
