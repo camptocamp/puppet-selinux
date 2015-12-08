@@ -94,6 +94,27 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
           provider.create
         end
       end
+
+      context 'when destroying an entry' do
+        let(:resource) do
+          Puppet::Type.type(:selinux_fcontext).new(
+            {
+              :name => '/web(/.*)?',
+              :provider => 'semanage',
+            }
+          )
+        end
+
+        let(:provider) do
+          resource.provider
+        end
+
+        it 'should destroy an entry' do
+          described_class.expects(:semanage).with(['fcontext', '-d', '"/web(/.*)?"'])
+          described_class.expects(:restorecon).with(['-R', '/web'])
+          provider.destroy
+        end
+      end
     end
   end
 end
