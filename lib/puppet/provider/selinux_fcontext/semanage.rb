@@ -49,4 +49,39 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
     restorecon(['-R', resource[:name].split('(')[0]])
     @property_hash[:ensure] == :absent
   end
+
+  def initialize(value={})
+    super(value)
+    @property_flush = {}
+  end
+
+  def seluser=(value)
+    @property_flush[:seluser] = value
+  end
+
+  def selrole=(value)
+    @property_flush[:selrole] = value
+  end
+
+  def seltype=(value)
+    @property_flush[:seltype] = value
+  end
+
+  def selrange=(value)
+    @property_flush[:selrange] = value
+  end
+
+  def flush
+    if not @property_flush.empty?
+      args = ['fcontext', '-m']
+      args << ['--seuser', @property_flush[:seluser]] if @property_flush[:seluser]
+      args << ['--role', @property_flush[:selrole]] if @property_flush[:selrole]
+      args << ['--type', @property_flush[:seltype]] if @property_flush[:seltype]
+      args << ['--range', @property_flush[:selrange]] if @property_flush[:selrange]
+      args << "\"#{resource[:name]}\""
+      semanage(args.flatten)
+      restorecon(['-R', resource[:name].split('(')[0]])
+      @property_hash = resource.to_hash
+    end
+  end
 end
