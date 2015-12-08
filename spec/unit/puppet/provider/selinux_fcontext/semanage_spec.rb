@@ -88,11 +88,9 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
           resource.provider
         end
 
-        before :each do
-          described_class.expects(:semanage).with(['fcontext', '-a', '--type', 'httpd_sys_content_t', '"/web(/.*)?"'])
-        end
-
         it 'should create a new entry' do
+          described_class.expects(:semanage).with(['fcontext', '-a', '--type', 'httpd_sys_content_t', '"/web(/.*)?"'])
+          described_class.expects(:restorecon).with(['-R', '/web'])
           provider.create
         end
       end

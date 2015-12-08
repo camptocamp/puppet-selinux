@@ -1,6 +1,6 @@
 Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
 
-  commands :semanage => 'semanage'
+  commands :semanage => 'semanage', :restorecon => 'restorecon'
 
   mk_resource_methods
 
@@ -40,5 +40,6 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
     args << ['--range', resource[:selrange]] if resource[:selrange]
     args << "\"#{resource[:name]}\""
     semanage(args.flatten)
+    restorecon(['-R', resource[:name].split('(')[0]])
   end
 end
