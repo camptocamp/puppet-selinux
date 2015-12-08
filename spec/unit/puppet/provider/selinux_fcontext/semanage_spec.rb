@@ -24,10 +24,8 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
       end
 
       context 'without file contexts' do
-        before :each do
-          described_class.expects(:semanage).with('fcontext', '-n', '-l', '-C').returns ''
-        end
         it 'should return no resources' do
+          described_class.expects(:semanage).with('fcontext', '-n', '-l', '-C').returns ''
           expect(described_class.instances.size).to eq(0)
         end
       end
