@@ -18,10 +18,23 @@ Puppet::Type.newtype(:selinux_port) do
     defaultto :tcp
   end
 
+  newparam(:port, :namevar => true) do
+    desc "The SELinux type to apply."
+  end
+
   def self.title_patterns
     [
       [
-        /^((\S+)\/(\S+))$/,
+        /^(([^\/]+)\/([^\/]+)\/(.*))$/,
+        [
+          [ :name, lambda{|x| x} ],
+          [ :seltype, lambda{|x| x} ],
+          [ :proto, lambda{|x| x} ],
+          [ :port, lambda{|x| x} ],
+        ],
+      ],
+      [
+        /^(([^\/]+)\/([^\/]+))$/,
         [
           [ :name, lambda{|x| x} ],
           [ :seltype, lambda{|x| x} ],
@@ -35,9 +48,5 @@ Puppet::Type.newtype(:selinux_port) do
         ],
       ],
     ]
-  end
-
-  newproperty(:port) do
-    desc "The SELinux type to apply."
   end
 end

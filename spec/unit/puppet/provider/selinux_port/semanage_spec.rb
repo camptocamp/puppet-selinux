@@ -32,48 +32,34 @@ describe Puppet::Type.type(:selinux_port).provider(:semanage) do
 
       context 'with a port' do
         before :each do
-          described_class.expects(:semanage).with(['port', '-n', '-l']).returns \
-            'afs_bos_port_t                 udp      7007
-'
+          described_class.expects(:semanage).with(['port', '-n', '-l']).returns 'http_port_t                 tcp      80, 443'
         end
-        it 'should return one resource' do
-          expect(described_class.instances.size).to eq(1)
-        end
-        it 'should return / file' do
-          expect(described_class.instances[0].instance_variable_get("@property_hash")).to eq( {
-            :ensure  => :present,
-            :name    => 'afs_bos_port_t/udp',
-            :seltype => 'afs_bos_port_t',
-            :proto   => 'udp',
-            :port    => '7007',
-          } )
-        end
-      end
-
-      context 'with two file contexts' do
-        before :each do
-          described_class.expects(:semanage).with(['port', '-n', '-l']).returns \
-            'afs_bos_port_t                 udp      7007
-afs_client_port_t              udp      7001
-'
-        end
-        it 'should return two resources' do
+        it do
           expect(described_class.instances.size).to eq(2)
         end
-        it 'should return /.*' do
+        it do
+          expect(described_class.instances[0].instance_variable_get("@property_hash")).to eq( {
+            :ensure  => :present,
+            :name    => 'http_port_t/tcp/80',
+            :seltype => 'http_port_t',
+            :proto   => 'tcp',
+            :port    => '80',
+          } )
+        end
+        it do
           expect(described_class.instances[1].instance_variable_get("@property_hash")).to eq( {
             :ensure  => :present,
-            :name    => 'afs_client_port_t/udp',
-            :seltype => 'afs_client_port_t',
-            :proto   => 'udp',
-            :port    => '7001',
+            :name    => 'http_port_t/tcp/443',
+            :seltype => 'http_port_t',
+            :proto   => 'tcp',
+            :port    => '443',
           } )
         end
       end
 
       context 'when manipulating objects' do
         let(:resource) do
-          Puppet::Type.type(:selinux_port).new({:name => 'http_port_t/tcp', :port => '81', :provider => 'semanage'})
+          Puppet::Type.type(:selinux_port).new({:name => 'http_port_t/tcp/81', :provider => 'semanage'})
         end
 
         let(:provider) do
@@ -91,13 +77,6 @@ afs_client_port_t              udp      7001
           it 'should call `semanage port -d http_port_t -p tcp 81`' do
             provider.expects(:semanage).with(['port', '-d', 'http_port_t', '-p', 'tcp', '81'])
             provider.destroy
-          end
-        end
-
-        context 'when modifying an port' do
-          it 'should call `semanage port -m http_port_t -p tcp 80`' do
-            provider.expects(:semanage).with(['port', '-m', 'http_port_t', '-p', 'tcp', '80'])
-            provider.port = '80'
           end
         end
       end
@@ -122,13 +101,6 @@ afs_client_port_t              udp      7001
           it 'should call `semanage port -d http_port_t -p tcp 81`' do
             provider.expects(:semanage).with(['port', '-d', 'http_port_t', '-p', 'tcp', '81'])
             provider.destroy
-          end
-        end
-
-        context 'when modifying an port' do
-          it 'should call `semanage port -m http_port_t -p tcp 80`' do
-            provider.expects(:semanage).with(['port', '-m', 'http_port_t', '-p', 'tcp', '80'])
-            provider.port = '80'
           end
         end
       end

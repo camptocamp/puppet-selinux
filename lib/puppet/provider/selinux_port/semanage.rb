@@ -5,16 +5,20 @@ Puppet::Type.type(:selinux_port).provide(:semanage) do
   mk_resource_methods
 
   def self.instances
+    resources = []
     semanage(['port', '-n', '-l']).split("\n").map do |port|
-      seltype, proto, port = port.split
-      new({
-        :ensure  => :present,
-        :name    => "#{seltype}/#{proto}",
-        :seltype => seltype,
-        :proto   => proto,
-        :port    => port,
-      })
+      seltype, proto, ports = port.split(' ', 3)
+      ports.gsub(/\s+/, "").split(',').map do |p|
+        resources << new({
+          :ensure  => :present,
+          :name    => "#{seltype}/#{proto}/#{p}",
+          :seltype => seltype,
+          :proto   => proto,
+          :port    => p,
+        })
+      end
     end
+    resources
   end
 
   def self.prefetch(resources)
