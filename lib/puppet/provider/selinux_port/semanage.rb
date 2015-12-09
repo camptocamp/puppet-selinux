@@ -25,8 +25,9 @@ Puppet::Type.type(:selinux_port).provide(:semanage) do
     ports = instances
     resources.keys.each do |name|
       if provider = ports.find{ |port|
-        port.seltype == resources[name][:seltype] &&
-          port.proto == resources[name][:proto]
+        port.seltype.to_s == resources[name][:seltype].to_s \
+        && port.proto.to_s == resources[name][:proto].to_s \
+        && port.port.to_s == resources[name][:port].to_s
       }
         resources[name].provider = provider
       end
