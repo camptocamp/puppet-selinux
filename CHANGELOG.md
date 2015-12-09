@@ -1,3 +1,7 @@
+## 2015-09-09 - Release 0.3.1
+
+Fix selinux_port's semanage provider's prefetch method
+
 ## 2015-09-09 - Release 0.3.0
 
 Change selinux_port interface
