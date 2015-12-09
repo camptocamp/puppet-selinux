@@ -1,3 +1,7 @@
+## 2015-09-09 - Release 0.2.4
+
+Fix typo in selinux_port's semanage provider's prefetch method
+
 ## 2015-09-08 - Release 0.2.3
 
 Fix quoting issue
