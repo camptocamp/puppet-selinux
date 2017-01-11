@@ -32,7 +32,11 @@ define selinux::fcontext(
 
   $path = $name
 
-  $re = "^${path}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
+# Regular expression that is generated to be used with semanage fcontext --list
+
+  $reescapedpath = regsubst($path, '\(/\.\*\)', '\\(/\\.\\*\\)', 'G')
+
+  $re = "^${reescapedpath}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
 
   if $recursive {
     $path_glob = '(/.*)?'
