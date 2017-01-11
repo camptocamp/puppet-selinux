@@ -32,10 +32,10 @@ define selinux::fcontext(
 
   $path = $name
 
-# Regular expression that is generated to be used with semanage fcontext --list
-
+# Escaping most common special characters in contexts - (/.*)?
   $reescapedpath = regsubst($path, '\(/\.\*\)', '\\(/\\.\\*\\)', 'G')
 
+# Regular expression that is generated to be used with semanage fcontext --list
   $re = "^${reescapedpath}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
 
   if $recursive {
