@@ -46,34 +46,33 @@ define selinux::fcontext(
 
   $path = $name
 
-# Escaping most common special characters in contexts - (/.*)?
+# Escaping most common special character sequence in contexts - (/.*)?
   $reescapedpath = regsubst($path, '\(/\.\*\)', '\\(/\\.\\*\\)', 'G')
-
-# Regular expression that is generated to be used with semanage fcontext --list
-  $re = "^${reescapedpath}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
 
   if $recursive {
     $path_glob = '(/.*)?'
+    $re = "^${reescapedpath}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
   } else {
     # lint:ignore:empty_string_assignment
     $path_glob = ''
     # lint:endignore
+    $re = "^${reescapedpath}\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
   }
 
   if $ensure == 'present' {
-    $semanage = '--add'
+    $semanagearg = '--add'
     $grep     = 'egrep'
   } else {
-      $semanage = '--delete'
+      $semanagearg = '--delete'
       $grep     = '! egrep -q'
   }
 
-# Change the regex into a shell glob
+# Change the regex into a shell glob for restorecon
   $pathrc = regsubst($path, '\(/\.\*\)', '/*', 'G')
 
   exec { "semanage fcontext ${setype} ${path}${path_glob}":
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
-    command => "semanage fcontext -a -t ${setype} \"${path}${path_glob}\"",
+    command => "semanage fcontext ${semanagearg} -t ${setype} \"${path}${path_glob}\"",
     unless  => "semanage fcontext --list | ( ${grep} '${re}' >/dev/null)",
   } ~>
   exec { "restorecon -R ${pathrc}":
