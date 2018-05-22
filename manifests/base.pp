@@ -72,6 +72,10 @@ class selinux::base {
       }
     }
 
+    default: {
+      fail "Unsupported OS family '${::osfamily}'"
+    }
+
   }
 
   # if needed, you can fetch and build libselinux-ruby-puppet from
