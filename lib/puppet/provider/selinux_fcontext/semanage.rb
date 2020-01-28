@@ -20,7 +20,8 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
     fcontexts = instances
     resources.keys.each do |name|
       provider = fcontexts.find { |fcontext| fcontext.name == name }
-      resources[name].provider = provider if provider
+      next unless provider
+      resources[name].provider = provider
     end
   end
 
@@ -68,7 +69,7 @@ Puppet::Type.type(:selinux_fcontext).provide(:semanage) do
   end
 
   def flush
-    return unless @property_flush.empty?
+    return if @property_flush.empty?
     args = ['fcontext', '-m']
     args << ['--seuser', @property_flush[:seluser]] if @property_flush[:seluser]
     args << ['--role', @property_flush[:selrole]] if @property_flush[:selrole]
