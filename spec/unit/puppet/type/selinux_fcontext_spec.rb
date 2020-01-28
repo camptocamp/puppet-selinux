@@ -11,12 +11,12 @@ describe Puppet::Type.type(:selinux_fcontext) do
       end
 
       describe 'when validating attributes' do
-        [ :name, :provider ].each do |param|
+        [:name, :provider].each do |param|
           it "should have a #{param} parameter" do
             expect(described_class.attrtype(param)).to eq(:param)
           end
         end
-        [ :ensure, :seluser, :selrole, :seltype, :selrange ].each do |prop|
+        [:ensure, :seluser, :selrole, :seltype, :selrange].each do |prop|
           it "should have a #{prop} property" do
             expect(described_class.attrtype(prop)).to eq(:property)
           end

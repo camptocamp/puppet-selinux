@@ -1,6 +1,5 @@
 Puppet::Type.type(:selinux_port).provide(:semanage) do
-
-  commands :semanage => 'semanage', :restorecon => 'restorecon'
+  commands semanage: 'semanage', restorecon: 'restorecon'
 
   mk_resource_methods
 
@@ -8,14 +7,12 @@ Puppet::Type.type(:selinux_port).provide(:semanage) do
     resources = []
     semanage(['port', '-n', '-l']).split("\n").map do |port|
       seltype, proto, ports = port.split(' ', 3)
-      ports.gsub(/\s+/, "").split(',').map do |p|
-        resources << new({
-          :ensure  => :present,
-          :name    => "#{seltype}/#{proto}/#{p}",
-          :seltype => seltype,
-          :proto   => proto,
-          :port    => p,
-        })
+      ports.gsub(%r{\s+}, '').split(',').map do |p|
+        resources << new(ensure: :present,
+                         name: "#{seltype}/#{proto}/#{p}",
+                         seltype: seltype,
+                         proto: proto,
+                         port: p)
       end
     end
     resources
@@ -24,13 +21,12 @@ Puppet::Type.type(:selinux_port).provide(:semanage) do
   def self.prefetch(resources)
     ports = instances
     resources.keys.each do |name|
-      if provider = ports.find{ |port|
+      next unless provider = ports.find do |port|
         port.seltype.to_s == resources[name][:seltype].to_s \
         && port.proto.to_s == resources[name][:proto].to_s \
         && port.port.to_s == resources[name][:port].to_s
-      }
-        resources[name].provider = provider
       end
+      resources[name].provider = provider
     end
   end
 
