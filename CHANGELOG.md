@@ -1,3 +1,9 @@
+## 2020-01-28 - Release 0.4.0
+
+- Fail on unsupported OS family
+- Add support for RHEL 8
+- Convert to PDK
+
 ## 2015-09-09 - Release 0.3.1
 
 Fix selinux_port's semanage provider's prefetch method
