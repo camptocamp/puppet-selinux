@@ -48,6 +48,18 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
       end
 
       context 'with two file contexts' do
+        let(:resource) do
+          Puppet::Type.type(:selinux_fcontext).new(
+            name: '/web(/.*)?',
+            provider: 'semanage',
+            seltype: 'httpd_sys_content_t',
+          )
+        end
+
+        let(:provider) do
+          resource.provider
+        end
+
         before :each do
           described_class.expects(:semanage).with(['fcontext', '-n', '-l', '-C']).returns \
             '/                                                  directory          system_u:object_r:root_t:s0
@@ -64,18 +76,6 @@ describe Puppet::Type.type(:selinux_fcontext).provider(:semanage) do
                                                                                              seltype: 'default_t',
                                                                                              selrange: 's0')
         end
-      end
-
-      let(:resource) do
-        Puppet::Type.type(:selinux_fcontext).new(
-          name: '/web(/.*)?',
-          provider: 'semanage',
-          seltype: 'httpd_sys_content_t',
-        )
-      end
-
-      let(:provider) do
-        resource.provider
       end
 
       context 'when creating an fcontext' do
