@@ -71,8 +71,8 @@ define selinux::module::redhat (
       }
 
       $build_reqs = $::operatingsystemmajrelease  ? {
-        /5|7/ => [File["${dest}/${name}.te"], Package['checkpolicy'], Package['selinux-policy-devel']],
-        '6'   => [File["${dest}/${name}.te"], Package['checkpolicy']],
+        /5|7|8/ => [File["${dest}/${name}.te"], Package['checkpolicy'], Package['selinux-policy-devel']],
+        '6'     => [File["${dest}/${name}.te"], Package['checkpolicy']],
       }
       $make_cmd = "make -f /usr/share/selinux/devel/Makefile ${name}.pp"
 
