@@ -18,6 +18,12 @@ class selinux::base {
     'RedHat': {
 
       case $::operatingsystemmajrelease {
+        '8': {
+          package{ 'selinux-policy-devel':
+            ensure => present,
+          }
+          $rubypkg_alias = 'libselinux-ruby'
+        }
 
         '7': {
           package { 'policycoreutils-python':
