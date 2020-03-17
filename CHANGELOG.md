@@ -1,3 +1,7 @@
+## 2020-03-17 - Release 0.4.1
+
+- selinux_permissive: fix prefetch (GH #45)
+
 ## 2020-01-28 - Release 0.4.0
 
 - Fail on unsupported OS family
