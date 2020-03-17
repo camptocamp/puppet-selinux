@@ -14,7 +14,8 @@ Puppet::Type.type(:selinux_permissive).provide(:semanage) do
     permissives = instances
     resources.keys.each do |name|
       provider = permissives.find { |permissive| permissive.name == name }
-      resources[name].provider = provider if provider
+      next unless provider
+      resources[name].provider = provider
     end
   end
 
