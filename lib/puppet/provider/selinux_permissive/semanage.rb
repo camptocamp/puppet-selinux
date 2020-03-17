@@ -13,7 +13,7 @@ Puppet::Type.type(:selinux_permissive).provide(:semanage) do
   def self.prefetch(resources)
     permissives = instances
     resources.keys.each do |name|
-      permissives.find { |permissive| permissive.name == name }
+      provider = permissives.find { |permissive| permissive.name == name }
       resources[name].provider = provider if provider
     end
   end
