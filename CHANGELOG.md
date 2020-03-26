@@ -1,3 +1,7 @@
+## 2020-03-26 - Release 0.5.0
+
+- allow stdlib 6
+
 ## 2020-03-17 - Release 0.4.1
 
 - selinux_permissive: fix prefetch (GH #45)
