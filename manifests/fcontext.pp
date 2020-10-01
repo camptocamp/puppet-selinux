@@ -23,6 +23,20 @@
 # ini the output of: semanage fcontext --list
 #/var/www(/.*)?                                     all files          system_u:object_r:httpd_sys_content_t:s0 # lint:ignore:80chars
 #
+# A more complex example:
+#
+#   # Make /var/www/*/*/logs httpd_log_t
+#   selinux::fcontext { '/var/www(/.*)(/.*)/logs':
+#    ensure      => present,
+#    recursive   => true,
+#    setype      => "httpd_log_t",
+#    refreshonly => true,
+#   }
+#
+# This will add a line to the configuration
+# It can be seen by executing semanage fcontext --list
+#/var/www(/.*)(/.*)/logs(/.*)?                      all files          system_u:object_r:httpd_log_t:s0
+
 define selinux::fcontext(
   $setype,
   $ensure    = 'present',
@@ -32,34 +46,35 @@ define selinux::fcontext(
 
   $path = $name
 
-  $re = "^${path}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
+# Escaping most common special character sequence in contexts - (/.*)?
+  $reescapedpath = regsubst($path, '\(/\.\*\)', '\\(/\\.\\*\\)', 'G')
 
   if $recursive {
     $path_glob = '(/.*)?'
+    $re = "^${reescapedpath}\\(/\\.\\*\\)\\?\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
   } else {
     # lint:ignore:empty_string_assignment
     $path_glob = ''
     # lint:endignore
+    $re = "^${reescapedpath}\\s+.*\\s+\\w+:\\w+:${setype}:s0 $"
   }
 
   if $ensure == 'present' {
-    $semanage = '--add'
+    $semanagearg = '--add'
     $grep     = 'egrep'
   } else {
-      $semanage = '--delete'
+      $semanagearg = '--delete'
       $grep     = '! egrep -q'
   }
 
-  $path_rc = regsubst( $path, '^(.*)\(.*', '\1' )
+# Change the regex into a shell glob for restorecon
+  $pathrc = regsubst($path, '\(/\.\*\)', '/*', 'G')
 
   exec { "semanage fcontext ${setype} ${path}${path_glob}":
     path    => '/usr/bin:/usr/sbin:/bin:/sbin',
-    command => "semanage fcontext -a -t ${setype} \"${path}${path_glob}\"",
+    command => "semanage fcontext ${semanagearg} -t ${setype} \"${path}${path_glob}\"",
     unless  => "semanage fcontext --list | ( ${grep} '${re}' >/dev/null)",
-  } ~> exec { "restorecon -R ${path}":
-    path        => '/usr/bin:/usr/sbin:/bin:/sbin',
-    command     => "restorecon -R ${path_rc}",
+  } ~> exec { "restorecon -R ${pathrc}":
     refreshonly => $refreshonly,
   }
-
 }
