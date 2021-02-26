@@ -27,24 +27,24 @@ Puppet::Type.newtype(:selinux_port) do
       [
         %r{^(([^/]+)/([^/]+)/(.*))$},
         [
-          [:name, ->(x) { x }],
-          [:seltype, ->(x) { x }],
-          [:proto, ->(x) { x }],
-          [:port, ->(x) { x }],
+          [:name],
+          [:seltype],
+          [:proto],
+          [:port],
         ],
       ],
       [
         %r{^(([^/]+)/([^/]+))$},
         [
-          [:name, ->(x) { x }],
-          [:seltype, ->(x) { x }],
-          [:proto, ->(x) { x }],
+          [:name],
+          [:seltype],
+          [:proto],
         ],
       ],
       [
         %r{(.*)},
         [
-          [:name, ->(x) { x }],
+          [:name],
         ],
       ],
     ]
