@@ -1,3 +1,8 @@
+## 2021-03-03 - Release 0.6.0
+
+- Fix the regex used to determine if the fcontext exists (#43)
+- Fix support for 'puppet generate types' (#46)
+
 ## 2020-03-26 - Release 0.5.0
 
 - allow stdlib 6
